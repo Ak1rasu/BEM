@@ -37,3 +37,35 @@
   // Initialize cart count display
   updateCartCount();
 })();
+
+function AddCard(title, price, rating, image){
+    let list = document.getElementById("cards--js");
+    let article = document.createElement("article");
+    article.innerHTML = 
+      `<img
+        src="${image}"
+        alt="Buzz Lightyear Pixar figure standing with arms slightly bent"
+        class="product__img"
+        width="150"
+        height="150"
+        loading="lazy"
+      />
+      <h2 class="product__price" id="buzz-price">$${price}</h2>
+      <h3 class="product__title" id="buzz-title">${title}</h3>
+      <p class="product__rating" aria-label="Five star rating">${rating}</p>
+      <button class="product__button" type="button">Add to Cart</button>
+      <button class="product__remove-button" type="button" aria-label="Remove Buzz Lightyear from cart" title="Remove from cart">×</button>`;
+      article.className = "product";
+      article.tabIndex = 0;
+      article.setAttribute("aria-labelledby", "buzz-title buzz-subtitle buzz-price");
+    list.append(article);
+    list.appendChild(article);
+}
+
+async function GetData() {
+    const response = await fetch("js/index.json");
+    const data = await response.json();
+    for (let i = 0; i < data.Cards.length; i++) {
+        AddCard(data.Cards[i].title, data.Cards[i].price, data.Cards[i].rating, data.Cards[i].image);
+}}
+GetData();
