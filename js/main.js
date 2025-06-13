@@ -1,3 +1,34 @@
+function AddCard(title, price, rating, image, className, label, add, alt) {
+    let list = document.getElementById("products--js");
+    let article = document.createElement("article");
+    article.innerHTML = 
+      `<img
+        src="${image}"
+        alt="${alt}"
+        class="product__img"
+        width="150"
+        height="150"
+        loading="lazy"
+      />
+      <h2 class="product__price" id="buzz-price">$${price}</h2>
+      <h3 class="product__title" id="buzz-title">${title}</h3>
+      <p class="product__rating" aria-label="Five star rating">${rating}</p>
+      <button class="product__button" type="button">${add}</button>
+      <button class="product__remove-button" type="button" aria-label="Remove Buzz Lightyear from cart" title="Remove from cart">×</button>`;
+      article.className = className;
+      article.tabIndex = 0;
+      article.setAttribute("aria-labelledby", label);
+    list.appendChild(article);
+}
+
+async function GetData() {
+    const response = await fetch("js/index.json");
+    const data = await response.json();
+    for (let i = 0; i < data.Cards.length; i++) {
+        AddCard(data.Cards[i].title, data.Cards[i].price, data.Cards[i].rating, data.Cards[i].image, data.Cards[i].className, data.Cards[i].label, data.Cards[i].add, data.Cards[i].alt);
+}}
+GetData();
+
 (() => {
   const cartCountEl = document.getElementById('cart-count');
   let cartCount = 0;
@@ -28,44 +59,16 @@
     updateCartCount();
   }
   // Attach event listeners
-  document.querySelectorAll('.product__button').forEach(button => {
-    button.addEventListener('click', onAddToCartClick);
-  });
-  document.querySelectorAll('.product__remove-button').forEach(button => {
-    button.addEventListener('click', onRemoveFromCartClick);
-  });
+  const productContainer = document.getElementById('products--js');
+
+productContainer.addEventListener('click', (event) => {
+  if (event.target.classList.contains('product__button')) {
+    onAddToCartClick(event);
+  } else if (event.target.classList.contains('product__remove-button')) {
+    onRemoveFromCartClick(event);
+  }
+});
   // Initialize cart count display
   updateCartCount();
 })();
 
-function AddCard(title, price, rating, image){
-    let list = document.getElementById("cards--js");
-    let article = document.createElement("article");
-    article.innerHTML = 
-      `<img
-        src="${image}"
-        alt="Buzz Lightyear Pixar figure standing with arms slightly bent"
-        class="product__img"
-        width="150"
-        height="150"
-        loading="lazy"
-      />
-      <h2 class="product__price" id="buzz-price">$${price}</h2>
-      <h3 class="product__title" id="buzz-title">${title}</h3>
-      <p class="product__rating" aria-label="Five star rating">${rating}</p>
-      <button class="product__button" type="button">Add to Cart</button>
-      <button class="product__remove-button" type="button" aria-label="Remove Buzz Lightyear from cart" title="Remove from cart">×</button>`;
-      article.className = "product";
-      article.tabIndex = 0;
-      article.setAttribute("aria-labelledby", "buzz-title buzz-subtitle buzz-price");
-    list.append(article);
-    list.appendChild(article);
-}
-
-async function GetData() {
-    const response = await fetch("js/index.json");
-    const data = await response.json();
-    for (let i = 0; i < data.Cards.length; i++) {
-        AddCard(data.Cards[i].title, data.Cards[i].price, data.Cards[i].rating, data.Cards[i].image);
-}}
-GetData();
